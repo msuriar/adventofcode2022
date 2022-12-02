@@ -3,39 +3,41 @@ package main
 import (
 	"bufio"
 	"fmt"
-  "log"
-  "os"
+	"log"
+	"os"
+	"sort"
 	"strconv"
 )
 
 func main() {
 	input := "data.txt"
-  file, err := os.Open(input)
-  if err != nil {
-    log.Fatal(err)
-  }
-  defer file.Close()
+	file, err := os.Open(input)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
 
 	s := bufio.NewScanner(file)
-	fmt.Println(maxCalories(s))
+	totals := sumCalories(s)
+	fmt.Println(maxCalories(totals))
 }
 
-func maxCalories(s *bufio.Scanner) int {
-  max := 0
-  acc := 0
-  for s.Scan() {
-    if s.Text() == "" {
-      if acc > max {
-        max, acc = acc, 0
-      }
-      acc = 0
-    } else {
-      i, _ := strconv.Atoi(s.Text())
-      acc += i
-    }
-  }
-  if acc > max {
-    max = acc
-  }
-  return max
+func sumCalories(s *bufio.Scanner) (out []int) {
+	acc := 0
+	for s.Scan() {
+		if s.Text() == "" {
+			out = append(out, acc)
+			acc = 0
+		} else {
+			i, _ := strconv.Atoi(s.Text())
+			acc += i
+		}
+		out = append(out, acc)
+	}
+	sort.Ints(out)
+	return out
+}
+
+func maxCalories(totals []int) int {
+	return totals[len(totals)-1]
 }
