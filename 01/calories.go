@@ -20,6 +20,7 @@ func main() {
 	s := bufio.NewScanner(file)
 	totals := sumCalories(s)
 	fmt.Println(maxCalories(totals))
+	fmt.Println(sumTopNCalories(totals, 3))
 }
 
 func sumCalories(s *bufio.Scanner) (out []int) {
@@ -32,12 +33,20 @@ func sumCalories(s *bufio.Scanner) (out []int) {
 			i, _ := strconv.Atoi(s.Text())
 			acc += i
 		}
-		out = append(out, acc)
 	}
+  out = append(out, acc)
 	sort.Ints(out)
 	return out
 }
 
 func maxCalories(totals []int) int {
-	return totals[len(totals)-1]
+	return sumTopNCalories(totals, 1)
+}
+
+func sumTopNCalories(totals []int, n int) int {
+  total := 0
+  for i := 1; i <= n; i++ {
+    total += totals[len(totals)-i]
+  }
+  return total
 }

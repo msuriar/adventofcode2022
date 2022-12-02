@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+  "fmt"
 	"strings"
 	"testing"
 )
@@ -22,6 +23,21 @@ func TestCalories(t *testing.T) {
 		s := bufio.NewScanner(strings.NewReader(tc.input))
 		totals := sumCalories(s)
 		got := maxCalories(totals)
+		if tc.want != got {
+			t.Fatalf("Case %v failed. Got: %d\tWant:%d\n", tc.id, got, tc.want)
+		}
+	}
+}
+
+func TestTop3Calories(t *testing.T) {
+	tests := []testCase{
+		{id: "C", input: "1000\n2000\n3000\n\n4000\n\n5000\n6000\n\n7000\n8000\n9000\n\n10000", want: 45000},
+	}
+	for _, tc := range tests {
+		s := bufio.NewScanner(strings.NewReader(tc.input))
+		totals := sumCalories(s)
+    fmt.Println(totals)
+		got := sumTopNCalories(totals, 3)
 		if tc.want != got {
 			t.Fatalf("Case %v failed. Got: %d\tWant:%d\n", tc.id, got, tc.want)
 		}
